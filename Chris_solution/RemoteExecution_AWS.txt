@@ -1,0 +1,53 @@
+create docker image locally :
+- docker build -t object-detection-app .
+creating docker container (for local execution):
+- docker run -p 5001:5001 object-detection-app
+
+
+pushing docker image to a previously created repo:
+- login to Docker Hub: docker login -u YOUR-USER-NAME (bettinaroe)
+- rename the docker image you want to push like so:
+	docker tag old-name YOUR-USER-NAME/repos-name
+	(e.g. docker tag object-detection-app bettinaroe/dic-ex3)
+- push the image to hub:
+	docker push YOUR-USER-NAME/repos-name
+	(e.g. docker push bettinaroe/repos-name)
+
+
+on AWS:
+
+https://www.youtube.com/watch?v=NJmkQ7q30eQ
+- before creating instance, generated a new key pair and imported it to AWS (I called it id_AWS)
+- create new EC2 instance
+	https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instances-and-amis.html
+	
+	* used t2.medium (https://aws.amazon.com/ec2/instance-types/)
+	* in security rules made sure that for inbound rules http connection is possible since we need it to connect from uploader.py via port 80; also specified my own key pair in security settings
+- copy the IP address of the instance
+
+
+when the new instance was created:
+https://medium.com/bb-tutorials-and-thoughts/running-docker-containers-on-aws-ec2-9b17add53646
+
+- connect to instance: ssh -i ~/.ssh/id_AWS ec2-user@ip_address
+- install docker: sudo yum install -y docker
+- start the service docker: sudo service docker start
+- add the ec2-docker user to the group: sudo usermod -a -G docker ec2-user
+- logout and reconnect
+- pull Docker Image from Docker Hub:
+	* login to your docker hub profile if repo private: docker login
+	* pull the docker image: docker pull bettinaroe/dic_ex3:latest
+	* docker run -p 80:5001 --name dic_ex3 bettinaroe/dic_ex3:latest
+- run container with container name dic_ex3:
+	* docker run -p 80:5001 --name dic_ex3 bettinaroe/dic_ex3:latest
+	* once up and running we can use it
+
+On local machine open new terminal (this is the same for local and remote execution):
+- in uploader.py make sure URL is with correct Public IPv4 DNS and save
+- cd to where uploader.py lives
+- run: python uploader.py
+=> will send images one by one to app and get information on bounding boxes in JSON format
+
+
+NOTE:
+- might have to change security group settings (inbound settings since only possible from Roost IP address)
