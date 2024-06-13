@@ -1,0 +1,10 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+
+flask=3.0.3=pypi_0
+numpy=1.26.4=pypi_0
+opencv-python-headless=4.10.0.82=pypi_0
+pip=24.0=py311h06a4308_0
+python=3.11.9=h955ad1f_0
+requests=2.32.3=pypi_0
