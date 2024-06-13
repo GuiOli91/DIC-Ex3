@@ -54,10 +54,20 @@ def object_detection():
 
     detected_objects = []
     for i in range(len(boxes)):
+        label = labels[class_ids[i]]
+        accuracy = confidences[i] 
         detected_objects.append({
-            "label": labels[class_ids[i]],
-            "accuracy": confidences[i]
+            "label": label,
+            "accuracy": accuracy
         })
+
+        x, y, w, h = boxes[i]
+        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.putText(img, f'{label} {accuracy:.2f}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    
+    output_folder = 'out_folder'
+    output_path = os.path.join(output_folder, f'{img_id}.jpg')
+    cv2.imwrite(output_path, img)
 
     response = {
         "id": img_id,
