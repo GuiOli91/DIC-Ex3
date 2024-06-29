@@ -8,8 +8,8 @@ import os
 app = Flask(__name__)
 
 
-net = cv2.dnn.readNet(os.path.join('yolo_tiny_configs', 'yolov3-tiny.weights'), 
-                      os.path.join('yolo_tiny_configs', 'yolov3-tiny.cfg'))
+net = cv2.dnn.readNet(os.path.join('..', 'yolo_tiny_configs', 'yolov3-tiny.weights'), 
+                      os.path.join('..', 'yolo_tiny_configs', 'yolov3-tiny.cfg'))
 layer_names = net.getLayerNames()
 output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
 
@@ -45,11 +45,11 @@ def object_detection():
                 x = int(center_x - w / 2)
                 y = int(center_y - h / 2)
                 boxes.append([x, y, w, h])
-                confidences.append(confidence)
+                confidences.append(float(confidence))
                 class_ids.append(class_id)
 
     labels = []
-    with open(os.path.join('yolo_tiny_configs', 'coco.names'), "r") as f:
+    with open(os.path.join('..', 'yolo_tiny_configs', 'coco.names'), "r") as f:
         labels = [line.strip() for line in f.readlines()]
 
     detected_objects = []
@@ -66,7 +66,7 @@ def object_detection():
         cv2.putText(img, f'{label} {accuracy:.2f}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     
     output_folder = 'out_folder'
-    output_path = os.path.join(output_folder, f'{img_id}.jpg')
+    output_path = os.path.join('..', output_folder, f'{img_id}.jpg')
     cv2.imwrite(output_path, img)
 
     response = {
