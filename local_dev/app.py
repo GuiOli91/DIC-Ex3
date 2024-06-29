@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 
-# Load YOLO model with correct paths
+
 net = cv2.dnn.readNet(os.path.join('yolo_tiny_configs', 'yolov3-tiny.weights'), 
                       os.path.join('yolo_tiny_configs', 'yolov3-tiny.cfg'))
 layer_names = net.getLayerNames()
@@ -17,7 +17,7 @@ output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
 def object_detection():
     data = request.json
     
-    # Generate a unique ID if not provided
+
     img_id = data.get('id', str(uuid.uuid4()))
     img_data = base64.b64decode(data['image_data'])
 
@@ -45,7 +45,7 @@ def object_detection():
                 x = int(center_x - w / 2)
                 y = int(center_y - h / 2)
                 boxes.append([x, y, w, h])
-                confidences.append(float(confidence))
+                confidences.append(confidence)
                 class_ids.append(class_id)
 
     labels = []
